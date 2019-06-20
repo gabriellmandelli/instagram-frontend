@@ -16,6 +16,7 @@ class Feed extends Component {
     feed: [],
   };
 
+  //executed when the component is started in the browser
   async componentDidMount() {
 
     this.registerToSocket();
@@ -29,11 +30,12 @@ class Feed extends Component {
   registerToSocket = () => {
     const socket = io('http://localhost:3333');
 
-    // post, like
+    // update realtime post
     socket.on('post', newPost => {
       this.setState({ feed: [newPost, ...this.state.feed] });
     })
 
+    // update realtime like
     socket.on('like', likedPost => {
       this.setState({
         feed: this.state.feed.map(post =>
@@ -41,9 +43,9 @@ class Feed extends Component {
         )
       })
     })
-
   }
 
+  //send request to like post by id
   handleLike = id => {
     console.log(`Like no post id: ${id}`);
     api.post(`/posts/${id}/like`);
